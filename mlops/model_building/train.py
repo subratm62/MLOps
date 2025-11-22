@@ -29,10 +29,10 @@ ytest = pd.read_csv(ytest_path)
 
 
 # List of numerical features in the dataset
-numerical_features = Xtrain.select_dtypes(include=['number'])
+numerical_features = Xtrain.select_dtypes(include=['number']).columns.tolist()
 
 # List of categorical features in the dataset
-categorical_features = Xtrain.select_dtypes(include=['object', 'category'])
+categorical_features = Xtrain.select_dtypes(include=['object', 'category']).columns.tolist()
 
 
 # Set the clas weight to handle class imbalance

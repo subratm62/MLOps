@@ -18,10 +18,10 @@ print("Dataset loaded successfully.")
 target = 'Exited'
 
 # List of numerical features in the dataset
-numerical_features = bank_dataset.select_dtypes(include=['number'])
+numerical_features = Xtrain.select_dtypes(include=['number']).columns.tolist()
 
 # List of categorical features in the dataset
-categorical_features = bank_dataset.select_dtypes(include=['object', 'category'])
+categorical_features = Xtrain.select_dtypes(include=['object', 'category']).columns.tolist()
 
 # Remove target column if it exists
 categorical_features = categorical_features.drop(columns=['Exited'], errors='ignore')
