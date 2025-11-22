@@ -21,7 +21,8 @@ target = 'Exited'
 numerical_features = bank_dataset.select_dtypes(include=['number']).columns.tolist()
 
 # List of categorical features in the dataset
-categorical_features = bank_dataset.select_dtypes(include=['object', 'category']).columns.tolist()
+categorical_features = bank_dataset.select_dtypes(include=['object', 'category'])
+categorical_features = categorical_features.drop(columns=['Exited'], errors='ignore').columns.tolist()
 
 # Remove target column if it exists
 categorical_features = categorical_features.drop(columns=['Exited'], errors='ignore')
