@@ -41,7 +41,7 @@ class_weight
 
 # Define the preprocessing steps
 preprocessor = make_column_transformer(
-    (StandardScaler(), numeric_features),
+    (StandardScaler(), numerical_features),
     (OneHotEncoder(handle_unknown='ignore'), categorical_features)
 )
 

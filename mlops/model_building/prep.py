@@ -27,7 +27,7 @@ categorical_features = bank_dataset.select_dtypes(include=['object', 'category']
 categorical_features = categorical_features.drop(columns=['Exited'], errors='ignore')
 
 # Define predictor matrix (X) using selected numeric and categorical features
-X = bank_dataset[numeric_features + categorical_features]
+X = bank_dataset[numerical_features + categorical_features]
 
 # Define target variable
 y = bank_dataset[target]
