@@ -18,11 +18,21 @@ print("Dataset loaded successfully.")
 target = 'Exited'
 
 # List of numerical features in the dataset
-numerical_features = bank_dataset.select_dtypes(include=['number']).columns.tolist()
+numerical_features = [
+    'CreditScore',       # Customer's credit score
+    'Age',               # Customer's age
+    'Tenure',            # Number of years the customer has been with the bank
+    'Balance',           # Customer’s account balance
+    'NumOfProducts',     # Number of products the customer has with the bank
+    'HasCrCard',         # Whether the customer has a credit card (binary: 0 or 1)
+    'IsActiveMember',    # Whether the customer is an active member (binary: 0 or 1)
+    'EstimatedSalary'    # Customer’s estimated salary
+]
 
 # List of categorical features in the dataset
-categorical_features = bank_dataset.select_dtypes(include=['object', 'category'])
-categorical_features = categorical_features.drop(columns=['Exited'], errors='ignore').columns.tolist()
+categorical_features = [
+    'Geography',         # Country where the customer resides
+]
 
 # Define predictor matrix (X) using selected numeric and categorical features
 X = bank_dataset[numerical_features + categorical_features]

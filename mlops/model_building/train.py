@@ -27,13 +27,22 @@ Xtest = pd.read_csv(Xtest_path)
 ytrain = pd.read_csv(ytrain_path)
 ytest = pd.read_csv(ytest_path)
 
-
 # List of numerical features in the dataset
-numerical_features = Xtrain.select_dtypes(include=['number']).columns.tolist()
+numerical_features = [
+    'CreditScore',       # Customer's credit score
+    'Age',               # Customer's age
+    'Tenure',            # Number of years the customer has been with the bank
+    'Balance',           # Customer’s account balance
+    'NumOfProducts',     # Number of products the customer has with the bank
+    'HasCrCard',         # Whether the customer has a credit card (binary: 0 or 1)
+    'IsActiveMember',    # Whether the customer is an active member (binary: 0 or 1)
+    'EstimatedSalary'    # Customer’s estimated salary
+]
 
 # List of categorical features in the dataset
-categorical_features = Xtrain.select_dtypes(include=['object', 'category']).columns.tolist()
-
+categorical_features = [
+    'Geography',         # Country where the customer resides
+]
 
 # Set the clas weight to handle class imbalance
 class_weight = ytrain.value_counts()[0] / ytrain.value_counts()[1]
