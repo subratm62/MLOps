@@ -24,9 +24,6 @@ numerical_features = bank_dataset.select_dtypes(include=['number']).columns.toli
 categorical_features = bank_dataset.select_dtypes(include=['object', 'category'])
 categorical_features = categorical_features.drop(columns=['Exited'], errors='ignore').columns.tolist()
 
-# Remove target column if it exists
-categorical_features = categorical_features.drop(columns=['Exited'], errors='ignore')
-
 # Define predictor matrix (X) using selected numeric and categorical features
 X = bank_dataset[numerical_features + categorical_features]
 
