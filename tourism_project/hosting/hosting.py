@@ -1,5 +1,6 @@
 import os
-from huggingface_hub import HfApi, create_repo, RepositoryNotFoundError
+from huggingface_hub import login, HfApi, create_repo
+from huggingface_hub.utils import RepositoryNotFoundError, HfHubHTTPError
 
 HF_TOKEN = os.getenv("HF_TOKEN")
 REPO_ID = "subratm62/Tourism-Package-Prediction"   # space repo
