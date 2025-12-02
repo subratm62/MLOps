@@ -1,10 +1,46 @@
-from huggingface_hub import HfApi
 import os
+from huggingface_hub import HfApi, create_repo, RepositoryNotFoundError
 
-api = HfApi(token=os.getenv("HF_TOKEN"))
+HF_TOKEN = os.getenv("HF_TOKEN")
+REPO_ID = "subratm62/Tourism-Package-Prediction"   # space repo
+REPO_TYPE = "space"
+
+api = HfApi(token=HF_TOKEN)
+
+# -----------------------------
+# 1. Create Space if it doesn't exist
+# -----------------------------
+def ensure_space_exists(repo_id: str, token: str):
+    try:
+        api.repo_info(repo_id, repo_type="space")
+        print(f"Space '{repo_id}' already exists!")
+    except RepositoryNotFoundError:
+        print(f"Space '{repo_id}' not found. Creating it now...")
+
+        create_repo(
+            name=repo_id.split("/")[1],   # extract repo name only
+            repo_type="space",
+            space_sdk="docker",           # Using Docker SDK
+            private=False,
+            token=token
+        )
+        print(f"Space '{repo_id}' created successfully!")
+
+# Ensure the Space exists (create if missing)
+ensure_space_exists(REPO_ID, HF_TOKEN)
+
+# -----------------------------
+# 2. Upload folder to the Space
+# -----------------------------
+print("📤 Uploading files to HuggingFace Space...")
+
 api.upload_folder(
-    folder_path="tourism_project/deployment",     # the local folder containing your files
-    repo_id="subratm62/Tourism-Package-Prediction",          # the target repo
-    repo_type="space",                            # dataset, model, or space
-    path_in_repo="",                              # optional: subfolder path inside the repo
+    folder_path="tourism_project/deployment",   # local folder
+    repo_id=REPO_ID,
+    repo_type="space",
+    path_in_repo="",    # root of the Space repo
 )
+
+print("✅ Upload complete!")
+print(f"🔗 Visit your Space at: https://huggingface.co/spaces/{REPO_ID}")
+
