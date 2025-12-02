@@ -40,6 +40,9 @@ Xtest = pd.read_csv(Xtest_path)
 ytrain = pd.read_csv(ytrain_path)
 ytest = pd.read_csv(ytest_path)
 
+ytrain = ytrain.ravel()
+ytest = ytest.ravel()
+
 # List of numerical features in the dataset
 numeric_features = [
     "Age", "CityTier", "DurationOfPitch", "NumberOfPersonVisiting",
@@ -182,13 +185,16 @@ with mlflow.start_run():
     joblib.dump(best_model, model_path)
 
     # Log the model artifact
-    mlflow.log_artifact(model_path, name="model")
+    mlflow.log_artifact(model_path)
     print(f"Model saved as artifact at: {model_path}")
 
     # Log model meta
     with open("model_meta.json", "w") as f:
         json.dump(meta, f)
     mlflow.log_artifact("model_meta.json")
+
+    # Save the full pipeline (preprocessor + model)
+    mlflow.sklearn.log_model(best_model, "model")
 
     # Upload to Hugging Face
     repo_id = "subratm62/tourism-project"
