@@ -117,15 +117,15 @@ with mlflow.start_run():
     random_search.fit(Xtrain_resampled, ytrain_resampled)
 
     # Log every param set
-    results = grid_search.cv_results_
+    results = random_search.cv_results_
     for i in range(len(results['params'])):
         with mlflow.start_run(nested=True):
             mlflow.log_params(results['params'][i])
             mlflow.log_metric("mean_test_score", results['mean_test_score'][i])
             mlflow.log_metric("std_test_score", results['std_test_score'][i])
 
-    mlflow.log_params(grid_search.best_params_)
-    best_model = grid_search.best_estimator_
+    mlflow.log_params(random_search.best_params_)
+    best_model = random_search.best_estimator_
 
     classification_threshold = 0.40
 
