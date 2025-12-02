@@ -87,9 +87,6 @@ preprocessor = ColumnTransformer(
 # Set the clas weight to handle class imbalance
 #class_weight = ytrain.value_counts()[0] / ytrain.value_counts()[1]
 
-# Model pipeline
-model_pipeline = make_pipeline(preprocessor, xgb_model)
-
 param_grid = {
     'gradientboostingclassifier__n_estimators': randint(100, 300),
     'gradientboostingclassifier__learning_rate': uniform(0.01, 0.2),
@@ -97,9 +94,8 @@ param_grid = {
     'gradientboostingclassifier__subsample': uniform(0.6, 0.4)
 }
 
-gb_model = GradientBoostingClassifier()
 # Model pipeline
-
+gb_model = GradientBoostingClassifier()
 model_pipeline = make_pipeline(preprocessor, gb_model)
 
 with mlflow.start_run():
