@@ -100,19 +100,6 @@ model_pipeline = make_pipeline(preprocessor, gb_model)
 
 with mlflow.start_run():
 
-    # Log class weight
-    mlflow.log_param("scale_pos_weight", class_weight)
-
-    # -------- Grid Search --------
-    #grid_search = GridSearchCV(
-    #    model_pipeline,
-    #    param_grid,
-    #    cv=5,
-    #    n_jobs=-1,
-    #    refit=True
-    #)
-    #grid_search.fit(Xtrain, ytrain)
-
     # -------- Random Search --------
     random_search = RandomizedSearchCV(
         estimator=model_pipeline,
@@ -140,36 +127,24 @@ with mlflow.start_run():
     mlflow.log_params(grid_search.best_params_)
     best_model = grid_search.best_estimator_
 
-    # ------------------------------
-    #    Automatic Threshold Search
-    # ------------------------------
-
-    #y_scores = best_model.predict_proba(Xtest)[:, 1]
-    #prec, rec, thr = precision_recall_curve(ytest, y_scores)
-
-    #TARGET_RECALL = 0.90
-    #idx = (rec >= TARGET_RECALL).argmax() if any(rec >= TARGET_RECALL) else rec.argmax()
-    #best_threshold = thr[idx]
-
     classification_threshold = 0.40
-    #classification_threshold = best_threshold
 
-    mlflow.log_metric("best_threshold", float(best_threshold))
-    mlflow.log_metric("best_threshold_precision", float(precisions[best_idx]))
-    mlflow.log_metric("best_threshold_recall", float(recalls[best_idx]))
-    mlflow.log_metric("best_threshold_f1", float(f1_scores[best_idx]))
+    y_pred_train_proba = best_model.predict_proba(Xtrain)[:, 1]
+    y_pred_train = (y_pred_train_proba >= classification_threshold).astype(int)
 
-    # ------------------------------
-    #  Predictions using best threshold
-    # ------------------------------
+    y_pred_test_proba = best_model.predict_proba(Xtest)[:, 1]
+    y_pred_test = (y_pred_test_proba >= classification_threshold).astype(int)
+
+    train_report = classification_report(ytrain, y_pred_train, output_dict=True)
+    test_report = classification_report(ytest, y_pred_test, output_dict=True)
 
     # Train predictions
     y_pred_train_proba = best_model.predict_proba(Xtrain)[:, 1]
-    y_pred_train = (y_pred_train_proba >= best_threshold).astype(int)
+    y_pred_train = (y_pred_train_proba >= classification_threshold).astype(int)
 
     # Test predictions
     y_pred_test_proba = best_model.predict_proba(Xtest)[:, 1]
-    y_pred_test = (y_pred_test_proba >= best_threshold).astype(int)
+    y_pred_test = (y_pred_test_proba >= classification_threshold).astype(int)
 
     # Classification reports
     train_report = classification_report(ytrain, y_pred_train, output_dict=True)
@@ -195,9 +170,10 @@ with mlflow.start_run():
 
     meta = {
         "threshold": float(classification_threshold),
-        "strategy": "auto",
+        "strategy": "static",
         "test_precision": float(test_report['1']['precision']),
         "test_recall": float(test_report['1']['recall']),
+        "test_accuracy": float(train_report['accuracy']),
         "test_f1": float(test_report['1']['f1-score'])
     }
 
