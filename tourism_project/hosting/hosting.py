@@ -25,8 +25,7 @@ def ensure_space_exists(repo_id: str):
             repo_id.split("/")[1],   # extract repo name only
             repo_type="space",
             space_sdk="docker",           # Using Docker SDK
-            private=False,
-            token=token
+            private=False
         )
         print(f"Space '{repo_id}' created successfully!")
 
