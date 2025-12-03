@@ -6,7 +6,7 @@ from huggingface_hub import hf_hub_download
 st.set_page_config(page_title="Wellness Tourism Package Purchase Predictor", layout="centered")
 
 # ------------------------------
-# Load Model + Threshold from Hugging Face Hub
+# Load Model from Hugging Face Hub
 # ------------------------------
 
 REPO_ID = "subratm62/tourism-project"
@@ -14,11 +14,6 @@ REPO_ID = "subratm62/tourism-project"
 # Download model pipeline
 model_path = hf_hub_download(repo_id=REPO_ID, filename="best_tourism_model.joblib")
 model = joblib.load(model_path)
-
-# Download threshold metadata (saved during training)
-threshold_path = hf_hub_download(repo_id=REPO_ID, filename="chosen_threshold.txt")
-with open(threshold_path, "r") as f:
-    classification_threshold = float(f.read().strip())
 
 # ------------------------------
 # Streamlit UI
@@ -97,9 +92,13 @@ input_data = pd.DataFrame([{
     "OwnCar": 1 if OwnCar == "Yes" else 0
 }])
 
+# Set the classification threshold
+classification_threshold = 0.45
+
 # ------------------------------
 # Prediction
 # ------------------------------
+
 if st.button("Predict Purchase Likelihood"):
     proba = model.predict_proba(input_data)[0, 1]
     prediction = 1 if proba >= classification_threshold else 0
