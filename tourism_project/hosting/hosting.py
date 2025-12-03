@@ -8,10 +8,13 @@ REPO_TYPE = "space"
 
 api = HfApi(token=HF_TOKEN)
 
+# Login to your Hugging Face account using your access token
+login(token=HF_TOKEN)
+
 # -----------------------------
 # 1. Create Space if it doesn't exist
 # -----------------------------
-def ensure_space_exists(repo_id: str, token: str):
+def ensure_space_exists(repo_id: str):
     try:
         api.repo_info(repo_id, repo_type="space")
         print(f"Space '{repo_id}' already exists!")
@@ -19,7 +22,7 @@ def ensure_space_exists(repo_id: str, token: str):
         print(f"Space '{repo_id}' not found. Creating it now...")
 
         create_repo(
-            name=repo_id.split("/")[1],   # extract repo name only
+            repo_id.split("/")[1],   # extract repo name only
             repo_type="space",
             space_sdk="docker",           # Using Docker SDK
             private=False,
@@ -28,7 +31,7 @@ def ensure_space_exists(repo_id: str, token: str):
         print(f"Space '{repo_id}' created successfully!")
 
 # Ensure the Space exists (create if missing)
-ensure_space_exists(REPO_ID, HF_TOKEN)
+ensure_space_exists(REPO_ID)
 
 # -----------------------------
 # 2. Upload folder to the Space
