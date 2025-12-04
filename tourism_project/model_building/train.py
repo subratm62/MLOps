@@ -25,8 +25,6 @@ from huggingface_hub import login, HfApi, create_repo
 from huggingface_hub.utils import RepositoryNotFoundError, HfHubHTTPError
 import mlflow
 
-# restrict the float value up to 2 decimal places
-pd.set_option('display.float_format', lambda x: '%.2f' % x)
 
 mlflow.set_tracking_uri("http://localhost:5000")
 mlflow.set_experiment("mlops-tourism-project")
@@ -84,7 +82,7 @@ binary_transformer = Pipeline(steps=[
 # Combine all transformers
 preprocessor = ColumnTransformer(
     transformers=[
-        #("num", numeric_transformer, numeric_features),
+        ("num", numeric_transformer, numeric_features),
         ("cat", categorical_transformer, categorical_nominal),
         ("bin", binary_transformer, binary_features)
     ]
