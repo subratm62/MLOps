@@ -165,12 +165,6 @@ with mlflow.start_run():
         "test_f1": test_report['1']['f1-score']
     })
 
-    # Persist threshold with the model artifacts
-    #with open("chosen_threshold.txt", "w") as f:
-    #    f.write(str(best_threshold))
-
-    #mlflow.log_artifact("chosen_threshold.txt")
-
     meta = {
         "threshold": float(classification_threshold),
         "strategy": "static",
@@ -209,10 +203,17 @@ with mlflow.start_run():
         create_repo(repo_id=repo_id, repo_type=repo_type, private=False)
         print(f"Space '{repo_id}' created.")
 
-    # create_repo("churn-model", repo_type="model", private=False)
+    # Upload model binary
     api.upload_file(
         path_or_fileobj="best_tourism_model.joblib",
         path_in_repo="best_tourism_model.joblib",
+        repo_id=repo_id,
+        repo_type=repo_type,
+    )
+    # Upload model meta-data
+    api.upload_file(
+        path_or_fileobj="model_meta.json",
+        path_in_repo="model_meta.json",
         repo_id=repo_id,
         repo_type=repo_type,
     )
