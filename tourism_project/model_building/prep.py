@@ -24,6 +24,11 @@ gender_map = {
 }
 tourism_dataset['Gender'] = tourism_dataset['Gender'].map(gender_map)
 
+# Clean MaritalStatus values
+tourism_dataset["MaritalStatus"] = tourism_dataset["MaritalStatus"].replace({
+    "Unmarried": "Single"
+})
+
 # Drop useless columns
 tourism_dataset = tourism_dataset.drop(columns=["Unnamed: 0", "CustomerID"])
 
